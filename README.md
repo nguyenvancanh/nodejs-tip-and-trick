@@ -72,7 +72,7 @@ Cách đơn giản nhất là sử dụng event, nhưng như vậy đôi khi ch�
 
 Vậy làm cách nào để bạn có thể giải quyết được vấn đề trên, có 2 thư viện để giúp bạn giải được bài toán trên đó là async.js và Q. Cả 2 đều có nhưng giải pháp riêng biệt để ngăn chặn việc sử dụng "callback hell"
 
-Async.js hay gọi ngắn gọn lại là async cho phép bạn dễ dàng thực thi các hàm theo cách tuần tự, hoặc song song mà không cần lồng cúng vào nhau. Bạn có thể tham khảo thêm về async trên trang (https://github.com/caolan/async)[https://github.com/caolan/async]. Dưới đây là một số template mà async hỗ trợ dựa vào tài liệu readme mà họ cung cấp
+Async.js hay gọi ngắn gọn lại là async cho phép bạn dễ dàng thực thi các hàm theo cách tuần tự, hoặc song song mà không cần lồng cúng vào nhau. Bạn có thể tham khảo thêm về async trên trang [https://github.com/caolan/async](https://github.com/caolan/async). Dưới đây là một số template mà async hỗ trợ dựa vào tài liệu readme mà họ cung cấp
 
 ```
 async.map([‘file1',’file2',’file3'], fs.stat, function(err, results){
@@ -111,7 +111,7 @@ async.map([‘file1',’file2',’file3'], fs.stat, function(err, results){
 
 Nếu chúng ta áp dụng async vào đoạn code register ở đầu bài toán, chúng ta sẽ được một đoạn code vô cũng dễ đọc.
 
-Một thư viện khác cũng hữu ích không kém đó là Q, các bạn có thể tham khảo thêm tại link (https://github.com/kriskowal/q)[https://github.com/kriskowal/q]. Thư viện này làm việc chủ yếu dựa vào promise. Một promise cơ bản là một object được trả về từ một phương thức với promise là cuối cùng sẽ trả về một object. Mối quan hệ này hoàn toàn thích hợp với bản chất bất đồng bộ của javascript và nodejs
+Một thư viện khác cũng hữu ích không kém đó là Q, các bạn có thể tham khảo thêm tại link [https://github.com/kriskowal/q](https://github.com/kriskowal/q). Thư viện này làm việc chủ yếu dựa vào promise. Một promise cơ bản là một object được trả về từ một phương thức với promise là cuối cùng sẽ trả về một object. Mối quan hệ này hoàn toàn thích hợp với bản chất bất đồng bộ của javascript và nodejs
 
 Một số ví dụ trên trang chủ của Q:
 
@@ -144,7 +144,7 @@ Q.fcall(checkIfNameExists)
 
 Debug trong NodeJs sẽ hơi khó hiểu nếu bạn đang học Java hay C# mà chuyển sang học NodeJS. Phần lớn những người mới lập trình nodejs sẽ sử dụng console.log để tiến hành debug. Tuy nhiên, vẫn có những lựa chọn khác mang tính quy ước hơn để tiến hành debug. Nodejs được xây dựng với việc tích hợp sẵn debug với việc gọi node debug. Tuy nhiên có một công cụ được nhiều developer lựa chọn hơn nữa đó là node-inspector. 
 
-Node inspector là một debuger interface sử dụng  Blink Developer Tools. Tóm lại, Node - inspector cho phép bạn gỡ lỗi ứng dụng của bạn bằng bất kỳ editor nào bạn chọn hay đơn giản nhất là trực tiếp trên trình duyệt chorome. Cho phép bạn thực hiện một số điều thực sự thú vị, như là thay đổi mã code trực tiếp, gỡ lỗi từng step. Để cài đặt vào project của mình bạn làm theo link sau: (https://github.com/node-inspector/node-inspector)[https://github.com/node-inspector/node-inspector]
+Node inspector là một debuger interface sử dụng  Blink Developer Tools. Tóm lại, Node - inspector cho phép bạn gỡ lỗi ứng dụng của bạn bằng bất kỳ editor nào bạn chọn hay đơn giản nhất là trực tiếp trên trình duyệt chorome. Cho phép bạn thực hiện một số điều thực sự thú vị, như là thay đổi mã code trực tiếp, gỡ lỗi từng step. Để cài đặt vào project của mình bạn làm theo link sau: [https://github.com/node-inspector/node-inspector](https://github.com/node-inspector/node-inspector)
 
 **4. Nodefly**
 
@@ -152,7 +152,7 @@ Sau khi hoàn thành và chạy ứng dụng của mình, bạn có khi nào t�
 
 Xem thêm hướng dẫn và cài đặt tại link
 
-(http://www.nodefly.com)[http://www.nodefly.com]
+[http://www.nodefly.com](http://www.nodefly.com)
 
 
 **6. Sử dung NPM để quản lý các module**
@@ -178,6 +178,17 @@ Cách tốt nhất là thêm node_modules của bạn vào file .ignore
 
 **7. Đừng quên return**
 
+Sai lầm tương đối phổ biến với những beginer nodejs đó là không return sau khi callback. Mặc dù, đôi khi việc này không có ý nghĩa gì, nhưng đôi khi bạn sẽ gặp phải những lỗi "magic" khi code callback của bạn được gọi 2 lần. Xem ví dụ sau:
 
+```
+function do(err,result, callback){
+ if(err){
+ callback(“error”);
+ }
+ callback(“good”);
+ }
+```
+
+Mới nhìn, đoạn code trên có ý nghĩa là nếu có lỗi thì callback về error, nếu không có lỗi thì callback về good. Nhưng việc callback không dừng lại sau khi nó được gọi. Đoạn mã trên luôn luôn gọi callback good. Hãy thử tưởng tượng bên trọng đoạn code vô cùng dài và phực tạp, chỉ vì bạn không return mà có thể sẽ mất hàng giờ đề fix b
 
 
