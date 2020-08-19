@@ -75,5 +75,109 @@ Vậy làm cách nào để bạn có thể giải quyết được vấn đề 
 Async.js hay gọi ngắn gọn lại là async cho phép bạn dễ dàng thực thi các hàm theo cách tuần tự, hoặc song song mà không cần lồng cúng vào nhau. Bạn có thể tham khảo thêm về async trên trang (https://github.com/caolan/async)[https://github.com/caolan/async]. Dưới đây là một số template mà async hỗ trợ dựa vào tài liệu readme mà họ cung cấp
 
 ```
+async.map([‘file1',’file2',’file3'], fs.stat, function(err, results){
+  // results is now an array of stats for each file
+ });
+ 
+ async.filter([‘file1',’file2',’file3'], fs.exists, function(results){
+ // results now equals an array of the existing files
+});
+ 
+ async.parallel([
+  function(){ … },
+  function(){ … }
+  ], callback);
+ 
+ async.series([
+  function(){ … },
+  function(){ … }
+  ]);
+ 
+ async.waterfall([
+  function(callback){
+   callback(null, ‘one’, ‘two’);
+  },
+  function(arg1, arg2, callback){
+   callback(null, ‘three’);
+  },
+  function(arg1, callback){
+ // arg1 now equals ‘three’
+ callback(null, ‘done’);
+ }
+ ], function (err, result) {
+ // result now equals ‘done’ 
+});
+```
+
+Nếu chúng ta áp dụng async vào đoạn code register ở đầu bài toán, chúng ta sẽ được một đoạn code vô cũng dễ đọc.
+
+Một thư viện khác cũng hữu ích không kém đó là Q, các bạn có thể tham khảo thêm tại link (https://github.com/kriskowal/q)[https://github.com/kriskowal/q]. Thư viện này làm việc chủ yếu dựa vào promise. Một promise cơ bản là một object được trả về từ một phương thức với promise là cuối cùng sẽ trả về một object. Mối quan hệ này hoàn toàn thích hợp với bản chất bất đồng bộ của javascript và nodejs
+
+Một số ví dụ trên trang chủ của Q:
 
 ```
+ promiseMeSomething()
+ .then(function (value) {
+ }, function (reason) {
+ });
+
+```
+
+Hàm promise me sẽ trả về một đối tượng ngay lập tức. Gọi "then" để trả về giá trị bạn mong muốn. Đây là một cách vô cùng ngắn gọn để tránh sự phức tạp của việc callback
+
+```
+Q.fcall(checkIfNameExists)
+ .then(checkIfPasswordIsGood)
+ .then(createAccount)
+ .then(createBlog)
+ .then(function (result) {
+ // Do something with the result
+})
+ .catch(function (error) {
+ // Handle any error from all above steps
+})
+ .done();
+ 
+```
+
+**3. Debug trong NodeJs** 
+
+Debug trong NodeJs sẽ hơi khó hiểu nếu bạn đang học Java hay C# mà chuyển sang học NodeJS. Phần lớn những người mới lập trình nodejs sẽ sử dụng console.log để tiến hành debug. Tuy nhiên, vẫn có những lựa chọn khác mang tính quy ước hơn để tiến hành debug. Nodejs được xây dựng với việc tích hợp sẵn debug với việc gọi node debug. Tuy nhiên có một công cụ được nhiều developer lựa chọn hơn nữa đó là node-inspector. 
+
+Node inspector là một debuger interface sử dụng  Blink Developer Tools. Tóm lại, Node - inspector cho phép bạn gỡ lỗi ứng dụng của bạn bằng bất kỳ editor nào bạn chọn hay đơn giản nhất là trực tiếp trên trình duyệt chorome. Cho phép bạn thực hiện một số điều thực sự thú vị, như là thay đổi mã code trực tiếp, gỡ lỗi từng step. Để cài đặt vào project của mình bạn làm theo link sau: (https://github.com/node-inspector/node-inspector)[https://github.com/node-inspector/node-inspector]
+
+**4. Nodefly**
+
+Sau khi hoàn thành và chạy ứng dụng của mình, bạn có khi nào tự hỏi là làm cách nào để theo dõi và tạo báo cáo để đảm bảo ứng dụng của bạn đang chạy một cách tối ưu nhất hay không ? Có một thư viện vô cùng đơn giản cho phép bạn thực hiện điều này mà không cần phải tốn quá nhiều công sức đó là **Nodefly**. Nodefly chỉ là những dòng code đơn thuần, với mục đích là theo dõi ứng dụng của bạn có bị tràn bộ nhớ hay không, đo lường các truy vấn tới redis, mongodb và một số ứng dụng thú vị khác.
+
+Xem thêm hướng dẫn và cài đặt tại link
+
+(http://www.nodefly.com)[http://www.nodefly.com]
+
+
+**6. Sử dung NPM để quản lý các module**
+
+Một trong những việc phổ biến và cơ bản nhất trong lập trình nodejs đó là bạn sẽ cần phải cài đặt các package cũng như các thư viện cần thiết vào project của mình thông qua npm. Node có một file để quản lý các package trong project đó là file package.json. Tuy nhiên, một vấn đề mà tất cả nhứng beginer gặp phải đó là giữ cho file package.json này luôn được cập nhật với các package bạn đang làm việc trong project. Bạn sẽ luôn phải mở file package.json và cập nhật thêm những module mới mà bạn mới cài đặt. Thao tác tưởng chừng vô cùng đơn giản nhưng nhiều beginer lại không biết, đó là khi cài đặt thì npm sẽ làm điều này cho bạn. Chỉ với thao tác vô cùng đơn giản 
+
+```
+npm install — save module_name 
+```
+
+Chỉ cần như vậy là npm sẽ tự động update file package.json với tên module và vesion mà bạn vừa cài đặt.
+
+**6. Không check trong node_mudule folder **
+
+Mặc dù chủ đề của chúng ta là về node và modules, nhưng chắc hẳn nhiều bạn không biết rằng chúng ta không nên check trong thư mục node_modules của mình. Lý do đằng sau việc này, là bất kỳ khi nào có ai đó muốn kiểm tra source code của bạn, họ chỉ cần chạy npm install và tải xuống tất cả các module cần thiết. Bạn có thê nói rằng, việc check node_modules không phải là vấn đề quá to tát và nghiêm trọng. Nhưng điều gì xảy ra nếu người kiểm tra source code của bạn không dùng hệ điều hành tương đồng với bạn ? Và một trong số các module mà bạn xử dụng được biên dịch thông qua quá trình chạy npm ? Khi người kiểm tra source code của bạn chắc chắn
+sẽ gặp lỗi, mà không biết nguyên nhân tại sao. Ví dụ như các module bcrypt và sentimental  được biên dịch trên máy chủ khi bạn biên dịch chúng vì chúng có thành phần gốc được viết bằng C.
+
+Cách tốt nhất là thêm node_modules của bạn vào file .ignore
+
+```
+// .gitignore node_modules/*
+```
+
+**7. Đừng quên return**
+
+
+
+
